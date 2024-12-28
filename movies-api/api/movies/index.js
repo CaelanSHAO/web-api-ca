@@ -7,6 +7,7 @@ import {
     getPopularMovies
   } from '../tmdb-api';
   
+import Favorite from '../../models/favoriteModel';
 
 const router = express.Router();
 
@@ -75,5 +76,28 @@ router.get('/tmdb/popular', asyncHandler(async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }));
+
+//POST favorites
+router.post('/favorites', asyncHandler(async (req, res) => {
+    try {
+        const { userId, movieId } = req.body;
+        const favorite = new Favorite({ userId, movieId });
+        await favorite.save();
+        res.status(201).json(favorite);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}));
+
+//get favorites from userId
+router.get('/favorites/:userId', asyncHandler(async (req, res) => {
+    try {
+        const favorites = await Favorite.find({ userId: req.params.userId });
+        res.status(200).json(favorites);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}));
+
 
 export default router;
