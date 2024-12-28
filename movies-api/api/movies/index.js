@@ -7,7 +7,7 @@ import {
     getPopularMovies
   } from '../tmdb-api';
   
-import Favorite from '../../models/favoriteModel';
+  import { Favorite } from './movieModel.js';
 
 const router = express.Router();
 
