@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
+
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -8,11 +9,9 @@ const UserSchema = new Schema({
   password: {type: String, required: true }
 });
 
-export default mongoose.model('User', UserSchema);
-
 UserSchema.methods.comparePassword = async function (passw) { 
   return await bcrypt.compare(passw, this.password); 
-};
+}
 
 UserSchema.statics.findByUserName = function (username) {
   return this.findOne({ username: username });
@@ -34,3 +33,6 @@ UserSchema.pre('save', async function(next) {
       next();
   }
 });
+
+
+export default mongoose.model('User', UserSchema);

@@ -1,10 +1,9 @@
 import express from 'express';
 import User from './userModel';
 import jwt from 'jsonwebtoken';
-
+import asyncHandler from 'express-async-handler';
 
 const router = express.Router(); // eslint-disable-line
-const asyncHandler = require('express-async-handler'); 
 
 // Get all users
 router.get('/', async (req, res) => {
@@ -26,7 +25,9 @@ router.get('/:id', async (req, res) => {
 });
 
 
-// register(Create) User
+
+//.... code as before
+
 // register(Create)/Authenticate User
 router.post('/', asyncHandler(async (req, res) => {
     try {
@@ -37,13 +38,16 @@ router.post('/', asyncHandler(async (req, res) => {
             await registerUser(req, res);
         } else {
             await authenticateUser(req, res);
-        }        
+        }
     } catch (error) {
         // Log the error and return a generic error message
         console.error(error);
         res.status(500).json({ success: false, msg: 'Internal server error.' });
     }
 }));
+
+// ... Code as before
+
 
 // Update a user
 router.put('/:id', async (req, res) => {
@@ -57,7 +61,6 @@ router.put('/:id', async (req, res) => {
         res.status(404).json({ code: 404, msg: 'Unable to Update User' });
     }
 });
-
 
 async function registerUser(req, res) {
     // Add input validation logic here
