@@ -31,14 +31,11 @@ const MovieSchema = new Schema({
   tagline: { type: String }
 });
 
-const FavoriteSchema = new Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
-  movieId: { type: Number, required: true },
-  createdAt: { type: Date, default: Date.now },
-});
-
 MovieSchema.statics.findByMovieDBId = function (id) {
-  return this.findOne({ id: id });
+  if (typeof id !== 'number') {
+      throw new Error('Movie ID must be a number');
+  }
+  return this.findOne({ id });
 };
 
 export default mongoose.model('Movies', MovieSchema);

@@ -74,10 +74,15 @@ router.get('/tmdb/popular', asyncHandler(async (req, res) => {
 //get movies by rating
 router.get('/rating', asyncHandler(async (req, res) => {
     const { minRating = 0, maxRating = 10 } = req.query;
-    const movies = await movies.find({
-        vote_average: { $gte: +minRating, $lte: +maxRating }
-    }).sort({ vote_average: -1 });
-    res.status(200).json(movies);
+    try {
+        const movies = await movieModel.find({
+            vote_average: { $gte: +minRating, $lte: +maxRating }
+        }).sort({ vote_average: -1 });
+        res.status(200).json(movies);
+    } catch (error) {
+        console.error('Error fetching movies by rating:', error.message); 
+        res.status(500).json({ message: error.message });
+    }
 }));
 
 
@@ -102,6 +107,30 @@ router.get('/favorites/:userId', asyncHandler(async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }));
+
+//Get full movie information about the user's collection
+router.get('/favorites/:userId/details', asyncHandler(async (req, res) => {
+    try {
+        const favorites = await Favorite.find({ userId: req.params.userId });
+        const movieIds = favorites.map(fav => fav.movieId);
+        const movies = await movieModel.find({ id: { $in: movieIds } });
+        res.status(200).json(movies);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}));
+
+//Delete user's favorite movies
+router.delete('/favorites/:userId/:movieId', asyncHandler(async (req, res) => {
+    try {
+        const { userId, movieId } = req.params;
+        await Favorite.deleteOne({ userId, movieId });
+        res.status(200).json({ message: 'Favorite deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}));
+
 
 
 export default router;
