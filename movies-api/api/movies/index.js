@@ -136,6 +136,14 @@ router.get('/watchlist/:userId', asyncHandler(async (req, res) => {
     res.status(200).json(watchlist);
 }));
 
+//Remove movies from Watchlist
+router.delete('/watchlist/:userId/:movieId', asyncHandler(async (req, res) => {
+    const { userId, movieId } = req.params;
+    await Watchlist.deleteOne({ userId, movieId });
+    res.status(200).json({ message: 'Movie removed from Watchlist' });
+}));
+
+
 
 
 export default router;
