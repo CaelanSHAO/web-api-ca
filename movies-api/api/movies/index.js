@@ -4,10 +4,11 @@ import express from 'express';
 import {
     getUpcomingMovies,
     getMovieGenres,
-    getPopularMovies
-  } from '../tmdb-api';
-  
-  import Favorite from './favoriteModel.js';
+    getPopularMovies,
+    getMovieReviews
+} from '../tmdb-api';
+
+import Favorite from './favoriteModel.js';
 import movies from '../../initialise-dev/movies.js';
 
 
@@ -42,7 +43,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
     if (movie) {
         res.status(200).json(movie);
     } else {
-        res.status(404).json({message: 'The movie you requested could not be found.', status_code: 404});
+        res.status(404).json({ message: 'The movie you requested could not be found.', status_code: 404 });
     }
 }));
 
@@ -53,8 +54,8 @@ router.get('/tmdb/upcoming', asyncHandler(async (req, res) => {
 
 router.get('/tmdb/genres', asyncHandler(async (req, res) => {
     try {
-        const genres = await getMovieGenres(); 
-        res.status(200).json(genres); 
+        const genres = await getMovieGenres();
+        res.status(200).json(genres);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -71,20 +72,20 @@ router.get('/tmdb/popular', asyncHandler(async (req, res) => {
     }
 }));
 
-//get movies by rating
-router.get('/rating', asyncHandler(async (req, res) => {
-    const { minRating = 0, maxRating = 10 } = req.query;
+// Get movie reviews
+router.get('/reviews/:id', asyncHandler(async (req, res) => {
+    const id = req.params.id;
+
     try {
-        const movies = await movieModel.find({
-            vote_average: { $gte: +minRating, $lte: +maxRating }
-        }).sort({ vote_average: -1 });
-        res.status(200).json(movies);
+        const reviews = await getMovieReviews(id);
+        if (!reviews || reviews.results.length === 0) {
+            return res.status(404).json({ message: 'No reviews found for the specified movie' });
+        }
+        res.status(200).json(reviews.results);
     } catch (error) {
-        console.error('Error fetching movies by rating:', error.message); 
         res.status(500).json({ message: error.message });
     }
 }));
-
 
 //POST favorites
 router.post('/favorites', asyncHandler(async (req, res) => {

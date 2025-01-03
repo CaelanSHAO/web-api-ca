@@ -18,6 +18,12 @@ app.use('/api/users', usersRouter);
 app.use(defaultErrHandler);
 app.use('/api/movies', authenticate, moviesRouter);
 
+// Add default root path
+app.get('/', (req, res) => {
+  res.send('Welcome to the Movie App API');
+});
+
+
 app.listen(port, () => {
   console.info(`Server running at ${port}`);
 });
