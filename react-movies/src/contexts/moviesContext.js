@@ -8,7 +8,47 @@ const MoviesContextProvider = (props) => {
   const [myReviews, setMyReviews] = useState( {} );
   const [watchlist, setWatchlist] = useState([]);
   const [page, setPage] = useState(1);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); 
+  const [user, setUser] = useState(null);
   const totalPages = 20;
+
+  const login = async (username, password) => {
+    try {
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('token', data.token);
+        setIsAuthenticated(true);
+        setUser({ username });
+        console.log("Login successful!");
+      } else {
+        console.error("Login failed:", data.msg);
+      }
+    } catch (error) {
+      console.error("Error during login:", error.message);
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+    setUser(null);
+    console.log("Logged out successfully!");
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+      setUser({ username: "User" });
+    }
+  }, []);
+
 
   const addToFavorites = (movie) => {
     let newFavorites = [];
