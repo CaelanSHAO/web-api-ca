@@ -5,11 +5,10 @@ import {
     getUpcomingMovies,
     getMovieGenres,
     getPopularMovies,
-    getMovieReviews
 } from '../tmdb-api';
 
 import Favorite from './favoriteModel.js';
-import movies from '../../initialise-dev/movies.js';
+import Watchlist from './watchlistModel.js';
 
 
 const router = express.Router();
@@ -144,6 +143,3 @@ router.delete('/watchlist/:userId/:movieId', asyncHandler(async (req, res) => {
 }));
 
 
-
-
-export default router;
