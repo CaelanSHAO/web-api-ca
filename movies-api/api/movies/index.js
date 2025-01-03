@@ -72,20 +72,9 @@ router.get('/tmdb/popular', asyncHandler(async (req, res) => {
     }
 }));
 
-// Get movie reviews
-router.get('/reviews/:id', asyncHandler(async (req, res) => {
-    const id = req.params.id;
 
-    try {
-        const reviews = await getMovieReviews(id);
-        if (!reviews || reviews.results.length === 0) {
-            return res.status(404).json({ message: 'No reviews found for the specified movie' });
-        }
-        res.status(200).json(reviews.results);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}));
+
+
 
 //POST favorites
 router.post('/favorites', asyncHandler(async (req, res) => {

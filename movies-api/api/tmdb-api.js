@@ -51,21 +51,5 @@ export const getPopularMovies = async () => {
 };
 
 
-export const getMovieReviews = async (id) => {
-    try {
-        const response = await fetch(
-            `https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${process.env.TMDB_KEY}`
-        );
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.status_message || 'Failed to fetch reviews.');
-        }
-
-        return await response.json();
-    } catch (error) {
-        throw error;
-    }
-};
 
 
