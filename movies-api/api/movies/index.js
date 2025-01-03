@@ -121,6 +121,21 @@ router.delete('/favorites/:userId/:movieId', asyncHandler(async (req, res) => {
     }
 }));
 
+//Add Movie to Watchlist
+router.post('/watchlist', asyncHandler(async (req, res) => {
+    const { userId, movieId } = req.body;
+    const watchlistItem = new Watchlist({ userId, movieId });
+    await watchlistItem.save();
+    res.status(201).json(watchlistItem);
+}));
+
+//Get the user's Watchlist
+router.get('/watchlist/:userId', asyncHandler(async (req, res) => {
+    const { userId } = req.params;
+    const watchlist = await Watchlist.find({ userId });
+    res.status(200).json(watchlist);
+}));
+
 
 
 export default router;
