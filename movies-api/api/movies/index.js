@@ -7,7 +7,9 @@ import {
     getPopularMovies
   } from '../tmdb-api';
   
-  import { Favorite } from './movieModel.js';
+  import Favorite from './favoriteModel.js';
+import movies from '../../initialise-dev/movies.js';
+
 
 const router = express.Router();
 
@@ -58,15 +60,7 @@ router.get('/tmdb/genres', asyncHandler(async (req, res) => {
     }
 }));
 
-//get all movies
-router.get('/all', asyncHandler(async (req, res) => {
-    try {
-        const movies = await movieModel.find(); 
-        res.status(200).json(movies); 
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}));
+
 
 router.get('/tmdb/popular', asyncHandler(async (req, res) => {
     try {
@@ -76,6 +70,16 @@ router.get('/tmdb/popular', asyncHandler(async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }));
+
+//get movies by rating
+router.get('/rating', asyncHandler(async (req, res) => {
+    const { minRating = 0, maxRating = 10 } = req.query;
+    const movies = await movies.find({
+        vote_average: { $gte: +minRating, $lte: +maxRating }
+    }).sort({ vote_average: -1 });
+    res.status(200).json(movies);
+}));
+
 
 //POST favorites
 router.post('/favorites', asyncHandler(async (req, res) => {
