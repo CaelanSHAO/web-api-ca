@@ -56,38 +56,26 @@ const MoviesContextProvider = (props) => {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchPopularMovies = async () => {
-      try {
-        const data = await getPopularMovies();
-        setPopularMovies(data);
-      } catch (error) {
-        console.error('Error fetching popular movies:', error.message);
-      }
-    };
-    fetchPopularMovies();
-  }, []);
 
+  //   const addToFavorites = async (movie) => {
+  //   try {
+  //     const data = await addFavoriteMovie(userId, movie.id);
+  //     setFavorites([...favorites, data]); 
+  //     console.log('Added to favorites:', data);
+  //   } catch (error) {
+  //     console.error('Error adding to favorites:', error.message);
+  //   }
+  // };
 
-    const addToFavorites = async (movie) => {
-    try {
-      const data = await addFavoriteMovie(userId, movie.id);
-      setFavorites([...favorites, data]); 
-      console.log('Added to favorites:', data);
-    } catch (error) {
-      console.error('Error adding to favorites:', error.message);
-    }
-  };
-
-  const fetchFavoritesDetails = async () => {
-    try {
-      const data = await getFavoriteMoviesDetails(userId);
-      setFavorites(data);
-      console.log('Fetched favorite movies details:', data);
-    } catch (error) {
-      console.error('Error fetching favorite movies details:', error.message);
-    }
-  };
+  // const fetchFavoritesDetails = async () => {
+  //   try {
+  //     const data = await getFavoriteMoviesDetails(userId);
+  //     setFavorites(data);
+  //     console.log('Fetched favorite movies details:', data);
+  //   } catch (error) {
+  //     console.error('Error fetching favorite movies details:', error.message);
+  //   }
+  // };
 
   const handlePageChange = (event, value) => {
     if (value < 1 || value > totalPages) {
@@ -100,28 +88,28 @@ const MoviesContextProvider = (props) => {
   };
 
 
-  const removeFromFavorites = (movie) => {
-    setFavorites(favorites.filter(
-      (mId) => mId !== movie.id
-    ))
-  };
+  // const removeFromFavorites = (movie) => {
+  //   setFavorites(favorites.filter(
+  //     (mId) => mId !== movie.id
+  //   ))
+  // };
 
-  const addToWatchlist = (movie) => {
-    let newWatchlist = [];
-    if (!watchlist.includes(movie.id)) {
-      newWatchlist = [...watchlist, movie.id];
-    }
-    else {
-      newWatchlist = [...watchlist];
-    }
-    setWatchlist(newWatchlist)
-  };
+  // const addToWatchlist = (movie) => {
+  //   let newWatchlist = [];
+  //   if (!watchlist.includes(movie.id)) {
+  //     newWatchlist = [...watchlist, movie.id];
+  //   }
+  //   else {
+  //     newWatchlist = [...watchlist];
+  //   }
+  //   setWatchlist(newWatchlist)
+  // };
 
-  const removeFromWatchlist = (movie) => {
-    setWatchlist(watchlist.filter(
-      (mId) => mId !== movie.id
-    ))
-  };
+  // const removeFromWatchlist = (movie) => {
+  //   setWatchlist(watchlist.filter(
+  //     (mId) => mId !== movie.id
+  //   ))
+  // };
 
 
 
@@ -133,12 +121,12 @@ const MoviesContextProvider = (props) => {
     <MoviesContext.Provider
       value={{
         favorites,
-        addToFavorites,
-        removeFromFavorites,
-        fetchFavoritesDetails,
-        watchlist,
-        addToWatchlist,
-        removeFromWatchlist,
+        // addToFavorites,
+        // removeFromFavorites,
+        // fetchFavoritesDetails,
+        // watchlist,
+        // addToWatchlist,
+        // removeFromWatchlist,
         addReview,
         page,
         handlePageChange,

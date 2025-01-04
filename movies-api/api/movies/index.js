@@ -5,6 +5,7 @@ import {
     getUpcomingMovies,
     getMovieGenres,
     getPopularMovies,
+    getNowPlayingMovies,
 } from '../tmdb-api';
 
 import Favorite from './favoriteModel.js';
@@ -59,6 +60,16 @@ router.get('/tmdb/genres', asyncHandler(async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }));
+
+router.get('/tmdb/now-playing', asyncHandler(async (req, res) => {
+    try {
+        const nowPlayingMovies = await getNowPlayingMovies(); 
+        res.status(200).json(nowPlayingMovies);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}));
+
 
 
 
