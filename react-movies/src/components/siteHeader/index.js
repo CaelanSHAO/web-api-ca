@@ -12,7 +12,7 @@ import { styled } from '@mui/material/styles';
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Select from "@mui/material/Select";
-
+import { MoviesContext } from "../contexts/moviesContext";
 
 const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
@@ -24,19 +24,19 @@ const SiteHeader = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  
+
   const navigate = useNavigate();
 
   const menuOptions = [
     { label: "Home", path: "/" },
     { label: "Favorites", path: "/movies/favorites" },
-    { label: "Upcoming", path: "/movies/upcoming" },  
+    { label: "Upcoming", path: "/movies/upcoming" },
     { label: `Trending (${timeWindow})`, path: `/movies/trending/${timeWindow}` },
     { label: "Now Playing", path: "/movie/now_playing" },
     { label: "Watchlist", path: "/movies/watchlist" },
 
-    
-  
+
+
   ];
 
   const handleMenuSelect = (pageURL) => {
@@ -64,6 +64,21 @@ const SiteHeader = () => {
             All you ever wanted to know about Movies!
           </Typography>
 
+          {isAuthenticated ? (
+          <>
+            <Typography variant="h6" sx={{ marginRight: "1rem" }}>
+              Welcome, {user?.username}
+            </Typography>
+            <Button color="inherit" onClick={logout}>
+              Logout
+            </Button>
+          </>
+        ) : (
+          <Button color="inherit" href="/login">
+          Login
+        </Button>
+      )}
+
           <input
             type="text"
             placeholder="Enter Person ID"
@@ -89,59 +104,61 @@ const SiteHeader = () => {
             <MenuItem value="day">Day</MenuItem>
             <MenuItem value="week">Week</MenuItem>
           </Select>
-            {isMobile ? (
-              <>
-                <IconButton
-                  aria-label="menu"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleMenu}
-                  color="inherit"
-                >
-                  <MenuIcon />
-                </IconButton>
-                
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={open}
-                  onClose={() => setAnchorEl(null)}
-                >
-                  {menuOptions.map((opt) => (
-                    <MenuItem
-                      key={opt.label}
-                      onClick={() => handleMenuSelect(opt.path)}
-                    >
-                      {opt.label}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </>
-            ) : (
-              <>
-                {menuOptions.map((opt) => (
-                  <Button
-                    key={opt.label}
-                    color="inherit"
-                    onClick={() => handleMenuSelect(opt.path)}
-                  >
-                    {opt.label}
-                  </Button>
-                ))}
-              </>
-            )}
-        </Toolbar>
-      </AppBar>
-      <Offset />
+            {
+    isMobile ? (
+      <>
+        <IconButton
+          aria-label="menu"
+          aria-controls="menu-appbar"
+          aria-haspopup="true"
+          onClick={handleMenu}
+          color="inherit"
+        >
+          <MenuIcon />
+        </IconButton>
+
+        <Menu
+          id="menu-appbar"
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          open={open}
+          onClose={() => setAnchorEl(null)}
+        >
+          {menuOptions.map((opt) => (
+            <MenuItem
+              key={opt.label}
+              onClick={() => handleMenuSelect(opt.path)}
+            >
+              {opt.label}
+            </MenuItem>
+          ))}
+        </Menu>
+      </>
+    ) : (
+      <>
+        {menuOptions.map((opt) => (
+          <Button
+            key={opt.label}
+            color="inherit"
+            onClick={() => handleMenuSelect(opt.path)}
+          >
+            {opt.label}
+          </Button>
+        ))}
+      </>
+    )
+  }
+        </Toolbar >
+      </AppBar >
+  <Offset />
     </>
   );
 };
