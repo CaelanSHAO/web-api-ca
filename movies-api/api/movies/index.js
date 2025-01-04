@@ -142,4 +142,4 @@ router.delete('/watchlist/:userId/:movieId', asyncHandler(async (req, res) => {
     res.status(200).json({ message: 'Movie removed from Watchlist' });
 }));
 
-
+export default router;
