@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -12,7 +12,7 @@ import { styled } from '@mui/material/styles';
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Select from "@mui/material/Select";
-import { MoviesContext } from "../contexts/moviesContext";
+import { MoviesContext } from "../../contexts/moviesContext";
 
 const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
@@ -26,6 +26,7 @@ const SiteHeader = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const navigate = useNavigate();
+  
 
   const menuOptions = [
     { label: "Home", path: "/" },
@@ -52,6 +53,9 @@ const SiteHeader = () => {
       navigate(`/person/${personId.trim()}`, { replace: true });
     }
   };
+
+  const { isAuthenticated, logout, user } = useContext(MoviesContext) || {};
+
 
   return (
     <>

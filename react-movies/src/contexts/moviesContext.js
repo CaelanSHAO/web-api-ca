@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { set } from "react-hook-form";
 
 export const MoviesContext = React.createContext(null);
@@ -114,6 +114,11 @@ const MoviesContextProvider = (props) => {
         addReview,
         page,
         handlePageChange,
+        isAuthenticated,
+        user,
+        login,
+        logout
+      
       }}
     >
       {props.children}
