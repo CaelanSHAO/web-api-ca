@@ -61,7 +61,7 @@ export const getTrendingToday = ({ queryKey }) => {
   console.log(queryKey);
 
   return fetch(
-    `https://api.themoviedb.org/3/trending/movie/${timeWindow}?api_key=${process.env.REACT_APP_TMDB_KEY}`
+    `/api/movies/tmdb/trending/${timeWindow}`
   ).then((response) => {
     if (!response.ok) {
       return response.json().then((error) => {
@@ -79,9 +79,7 @@ export const getTrendingToday = ({ queryKey }) => {
 
 export const getGenres = () => {
   return fetch(
-    "https://api.themoviedb.org/3/genre/movie/list?api_key=" +
-    process.env.REACT_APP_TMDB_KEY +
-    "&language=en-US"
+    `/api/movies/tmdb/genres`
   ).then((response) => {
     if (!response.ok) {
       return response.json().then((error) => {

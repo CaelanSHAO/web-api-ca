@@ -6,6 +6,7 @@ import {
     getMovieGenres,
     getPopularMovies,
     getNowPlayingMovies,
+    getTrendingMovies,
 } from '../tmdb-api';
 
 import Favorite from './favoriteModel.js';
@@ -47,6 +48,15 @@ router.get('/:id', asyncHandler(async (req, res) => {
     }
 }));
 
+router.get('/tmdb/popular', asyncHandler(async (req, res) => {
+    try {
+        const popularMovies = await getPopularMovies();
+        res.status(200).json(popularMovies);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}));
+
 router.get('/tmdb/upcoming', asyncHandler(async (req, res) => {
     const upcomingMovies = await getUpcomingMovies();
     res.status(200).json(upcomingMovies);
@@ -71,16 +81,19 @@ router.get('/tmdb/now-playing', asyncHandler(async (req, res) => {
 }));
 
 
-
-
-router.get('/tmdb/popular', asyncHandler(async (req, res) => {
+router.get('/tmdb/trending/:timeWindow', asyncHandler(async (req, res) => {
+    const { timeWindow } = req.params; 
     try {
-        const popularMovies = await getPopularMovies();
-        res.status(200).json(popularMovies);
+        const trendingMovies = await getTrendingMovies(timeWindow); 
+        res.status(200).json(trendingMovies); 
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message }); 
     }
 }));
+
+
+
+
 
 
 

@@ -70,4 +70,21 @@ export const getNowPlayingMovies = async () => {
 
 
 
+export const getTrendingMovies = async (timeWindow) => {
+    try {
+        const response = await fetch(
+            `https://api.themoviedb.org/3/trending/movie/${timeWindow}?api_key=${process.env.TMDB_KEY}`
+        );
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to fetch trending movies.');
+        }
+
+        return await response.json(); 
+    } catch (error) {
+        console.error('Failed to fetch trending movies:', error.message);
+        throw error; 
+    }
+};
 
