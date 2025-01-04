@@ -7,6 +7,12 @@ import {
     getPopularMovies,
     getNowPlayingMovies,
     getTrendingMovies,
+    getMovieImagesFromTMDB,
+    getMovieRecommendationsFromTMDB,
+    getMovieReviewsFromTMDB,
+    getMovieDetailsFromTMDB,
+    getActorDetailsFromTMDB,
+
 } from '../tmdb-api';
 
 import Favorite from './favoriteModel.js';
@@ -37,16 +43,17 @@ router.get('/', asyncHandler(async (req, res) => {
 }));
 
 
-// Get movie details
+// Get movie detail
 router.get('/:id', asyncHandler(async (req, res) => {
-    const id = parseInt(req.params.id);
-    const movie = await movieModel.findByMovieDBId(id);
-    if (movie) {
-        res.status(200).json(movie);
-    } else {
-        res.status(404).json({ message: 'The movie you requested could not be found.', status_code: 404 });
+    const { id } = req.params; 
+    try {
+        const movieDetails = await getMovieDetailsFromTMDB(id); 
+        res.status(200).json(movieDetails); 
+    } catch (error) {
+        res.status(500).json({ message: error.message }); 
     }
 }));
+
 
 router.get('/tmdb/popular', asyncHandler(async (req, res) => {
     try {
@@ -92,11 +99,56 @@ router.get('/tmdb/trending/:timeWindow', asyncHandler(async (req, res) => {
 }));
 
 
+router.get('/:id/images', asyncHandler(async (req, res) => {
+    const { id } = req.params; 
+    try {
+        const images = await getMovieImagesFromTMDB(id); 
+        res.status(200).json(images);
+    } catch (error) {
+        res.status(500).json({ message: error.message }); 
+    }
+}));
+
+router.get('/:id/recommendations', asyncHandler(async (req, res) => {
+    const { id } = req.params; 
+    try {
+        const recommendations = await getMovieRecommendationsFromTMDB(id); 
+        res.status(200).json(recommendations);
+    } catch (error) {
+        res.status(500).json({ message: error.message }); 
+    }
+}));
 
 
+router.get('/:id/reviews', asyncHandler(async (req, res) => {
+    const { id } = req.params; 
+    try {
+        const reviews = await getMovieReviewsFromTMDB(id); 
+        res.status(200).json(reviews); 
+    } catch (error) {
+        res.status(500).json({ message: error.message }); 
+    }
+}));
 
+router.get('/actors/:id', asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    try {
+        const actorDetails = await getActorDetailsFromTMDB(id);
+        res.status(200).json(actorDetails);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}));
 
-
+router.get('/tmdb/rating/:min-:max', asyncHandler(async (req, res) => {
+    const { min, max } = req.params;
+    try {
+        const movies = await getMoviesByRating(min, max); 
+        res.status(200).json(movies);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}));
 
 
 //POST favorites

@@ -98,7 +98,7 @@ export const getMovieImages = ({ queryKey }) => {
   const [, idPart] = queryKey;
   const { id } = idPart;
   return fetch(
-    `https://api.themoviedb.org/3/movie/${id}/images?api_key=${process.env.REACT_APP_TMDB_KEY}`
+    `/api/movies/${id}/images`
   ).then((response) => {
     if (!response.ok) {
       return response.json().then((error) => {
@@ -116,7 +116,7 @@ export const getMovieRecommendations = ({ queryKey }) => {
   const [, idPart] = queryKey;
   const { id } = idPart;
   return fetch(
-    `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US&page=1`
+    `/api/movies/${id}/recommendations`
   ).then((response) => {
     if (!response.ok) {
       return response.json().then((error) => {
@@ -134,7 +134,7 @@ export const getMovieReviews = ({ queryKey }) => {
   const [, idPart] = queryKey;
   const { id } = idPart;
   return fetch(
-    `https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${process.env.REACT_APP_TMDB_KEY}`
+    `/api/movies/${id}/reviews`
   ).then((response) => {
     if (!response.ok) {
       return response.json().then((error) => {
@@ -168,22 +168,34 @@ export const getUpcomingMovies = async (args) => {
 };
 
 
-export const getPersonDetails = (personId) => {
-  return fetch(
-    `https://api.themoviedb.org/3/person/${personId}?language=en-US&api_key=${process.env.REACT_APP_TMDB_KEY}&append_to_response=movie_credits`
-  )
+export const getActorDetails = ({ queryKey }) => {
+  if (!Array.isArray(queryKey) || queryKey.length < 2 || !queryKey[1]) {
+    throw new Error("Invalid queryKey. It must be an array with an ID object.");
+  }
+
+  const [, idPart] = queryKey;
+  const { id } = idPart;
+
+  if (!id) {
+    throw new Error("Actor ID is undefined. Please provide a valid actor ID.");
+  }
+
+  return fetch(`/api/movies/actors/${id}`)
     .then((response) => {
       if (!response.ok) {
         return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
+          throw new Error(error.message || "Failed to fetch actor details.");
         });
       }
       return response.json();
     })
     .catch((error) => {
+      console.error(`Failed to fetch actor details for ID ${id}: ${error.message}`);
       throw error;
     });
 };
+
+
 
 
 export const getMoviesByRating = ({ queryKey }) => {
@@ -206,3 +218,27 @@ export const getMoviesByRating = ({ queryKey }) => {
       throw error
     });
 };
+
+export const getMovieDetails = ({ queryKey }) => {
+  const [, idPart] = queryKey;
+  const { id } = idPart;
+
+  if (!id) {
+    throw new Error("Movie ID is undefined. Please provide a valid movie ID.");
+  }
+
+  return fetch(`/api/movies/${id}`)
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((error) => {
+          throw new Error(error.message || "Failed to fetch movie details.");
+        });
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error(`Failed to fetch movie details for ID ${id}: ${error.message}`);
+      throw error;
+    });
+};
+
