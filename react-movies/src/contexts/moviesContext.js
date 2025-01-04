@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { set } from "react-hook-form";
-
+import {
+  getPopularMovies,
+  addFavoriteMovie,
+  getFavoriteMoviesDetails,
+} from "../api/tmdb-api";
 export const MoviesContext = React.createContext(null);
 
 const MoviesContextProvider = (props) => {
-  const [favorites, setFavorites] = useState( [] );
-  const [myReviews, setMyReviews] = useState( {} );
+  const [favorites, setFavorites] = useState([]);
+  const [myReviews, setMyReviews] = useState({});
   const [watchlist, setWatchlist] = useState([]);
-  const [page, setPage] = useState(1);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); 
+ 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [movies, setMovies] = useState([]);
+  const [page, setPage] = useState(1);
+  
   const totalPages = 20;
 
   const login = async (username, password) => {
@@ -49,17 +56,37 @@ const MoviesContextProvider = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    const fetchPopularMovies = async () => {
+      try {
+        const data = await getPopularMovies();
+        setPopularMovies(data);
+      } catch (error) {
+        console.error('Error fetching popular movies:', error.message);
+      }
+    };
+    fetchPopularMovies();
+  }, []);
 
-  const addToFavorites = (movie) => {
-    let newFavorites = [];
-    if (!favorites.includes(movie.id)){
-      newFavorites = [...favorites, movie.id];
-      console.log(newFavorites)
+
+    const addToFavorites = async (movie) => {
+    try {
+      const data = await addFavoriteMovie(userId, movie.id);
+      setFavorites([...favorites, data]); 
+      console.log('Added to favorites:', data);
+    } catch (error) {
+      console.error('Error adding to favorites:', error.message);
     }
-    else{
-      newFavorites = [...favorites];
+  };
+
+  const fetchFavoritesDetails = async () => {
+    try {
+      const data = await getFavoriteMoviesDetails(userId);
+      setFavorites(data);
+      console.log('Fetched favorite movies details:', data);
+    } catch (error) {
+      console.error('Error fetching favorite movies details:', error.message);
     }
-    setFavorites(newFavorites)
   };
 
   const handlePageChange = (event, value) => {
@@ -67,39 +94,39 @@ const MoviesContextProvider = (props) => {
       console.error("Page out of bounds:", value);
       setPage(1);
       return;
-  }
-   console.log("Changing to page:", value);
+    }
+    console.log("Changing to page:", value);
     setPage(value);
   };
 
-  
+
   const removeFromFavorites = (movie) => {
-    setFavorites( favorites.filter(
+    setFavorites(favorites.filter(
       (mId) => mId !== movie.id
-    ) )
+    ))
   };
-  
+
   const addToWatchlist = (movie) => {
     let newWatchlist = [];
-    if (!watchlist.includes(movie.id)){
+    if (!watchlist.includes(movie.id)) {
       newWatchlist = [...watchlist, movie.id];
     }
-    else{
+    else {
       newWatchlist = [...watchlist];
     }
     setWatchlist(newWatchlist)
   };
-  
+
   const removeFromWatchlist = (movie) => {
-    setWatchlist( watchlist.filter(
+    setWatchlist(watchlist.filter(
       (mId) => mId !== movie.id
-    ) )
+    ))
   };
 
 
 
   const addReview = (movie, review) => {
-    setMyReviews( {...myReviews, [movie.id]: review } )
+    setMyReviews({ ...myReviews, [movie.id]: review })
   };
 
   return (
@@ -108,6 +135,7 @@ const MoviesContextProvider = (props) => {
         favorites,
         addToFavorites,
         removeFromFavorites,
+        fetchFavoritesDetails,
         watchlist,
         addToWatchlist,
         removeFromWatchlist,
@@ -118,7 +146,7 @@ const MoviesContextProvider = (props) => {
         user,
         login,
         logout
-      
+
       }}
     >
       {props.children}

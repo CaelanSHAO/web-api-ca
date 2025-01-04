@@ -19,6 +19,49 @@ export const getMovies = (args) => {
     return { results: [], error: error.message }; 
   });
 };
+
+export const getPopularMovies = async () => {
+  try {
+    const response = await fetch('/api/movies/tmdb/popular');
+    if (!response.ok) {
+      throw new Error('Failed to fetch popular movies');
+    }
+    return response.json();
+  } catch (error) {
+    console.error(error.message);
+    throw error;
+  }
+};
+
+export const addFavoriteMovie = async (userId, movieId) => {
+  try {
+    const response = await fetch('/api/movies/favorites', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, movieId }),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to add favorite movie');
+    }
+    return response.json();
+  } catch (error) {
+    console.error(error.message);
+    throw error;
+  }
+};
+
+export const getFavoriteMoviesDetails = async (userId) => {
+  try {
+    const response = await fetch(`/api/movies/favorites/${userId}/details`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch favorite movies details');
+    }
+    return response.json();
+  } catch (error) {
+    console.error(error.message);
+    throw error;
+  }
+};
   
 export const getNowPlaying = () => {
   return fetch(
@@ -40,7 +83,7 @@ export const getMovie = (args) => {
     const [, idPart] = args.queryKey;
     const { id } = idPart;
     return fetch(
-    `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.REACT_APP_TMDB_KEY}&append_to_response=credits`
+    `/api/movies?page=${id}`
   ).then((response) => {
     if (!response.ok) {
       return response.json().then((error) => {
@@ -152,7 +195,7 @@ export const getTrendingToday = ({ queryKey }) => {
     const [, pagePart] = args.queryKey;
     const { page } = pagePart;
     return fetch(
-      `https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US&include_adult=false&include_video=false&page=${page}`
+      `Y}&language=en-US&include_adult=false&include_video=false&page=${page}`
     ).then((response) => {
       if (!response.ok) {
         return response.json().then((error) => {
