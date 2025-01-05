@@ -6,27 +6,22 @@ export default function LoginPage() {
     const [error, setError] = useState('');
 
     const handleLogin = async () => {
-        if (!username || !password) {
-            setError('Both username and password are required');
-            return;
-        }
-        try {
-        const response = await fetch('/api/users/login', {
+        const response = await fetch('/api/users?action=login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
         });
+    
         const data = await response.json();
         if (response.ok) {
+            // 存储 Token
             localStorage.setItem('token', data.token);
             alert('Login successful');
         } else {
-            setError(data.message || 'Login failed');
-        }
-        }catch(error){
-            setError('An unexpected error occurred');
+            setError(data.msg || 'Login failed');
         }
     };
+    
 
     return (
         <div>

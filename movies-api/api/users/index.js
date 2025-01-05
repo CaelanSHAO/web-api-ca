@@ -65,8 +65,8 @@ router.put('/:id', async (req, res) => {
 });
 
 async function registerUser(req, res) {
-    // Add input validation logic here
     const { username, password } = req.body;
+
     if (!username || !password || password.length < 6) {
         return res.status(400).json({ success: false, msg: 'Invalid username or password. Password must be at least 6 characters long.' });
     }
@@ -76,10 +76,12 @@ async function registerUser(req, res) {
         return res.status(400).json({ success: false, msg: 'Username already exists.' });
     }
 
-    res.status(201).json({ success: true, msg: 'User successfully created.', user: newUser });
-
-    await User.create(req.body);
-    res.status(201).json({ success: true, msg: 'User successfully created.' });
+    try {
+        const newUser = await User.create({ username, password }); // 创建新用户
+        res.status(201).json({ success: true, msg: 'User successfully created.', user: { username: newUser.username } });
+    } catch (error) {
+        res.status(500).json({ success: false, msg: 'Internal server error.', error: error.message });
+    }
 }
 
 async function authenticateUser(req, res) {
