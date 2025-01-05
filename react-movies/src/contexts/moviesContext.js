@@ -8,17 +8,29 @@ import {
 export const MoviesContext = React.createContext(null);
 
 const MoviesContextProvider = (props) => {
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+
+
   const [favorites, setFavorites] = useState([]);
   const [myReviews, setMyReviews] = useState({});
   const [watchlist, setWatchlist] = useState([]);
  
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   
   const totalPages = 20;
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+      setUser({ username: "User" });
+    }
+  }, []);
+  
   const login = async (username, password) => {
     try {
       const response = await fetch('/api/users', {
@@ -48,13 +60,7 @@ const MoviesContextProvider = (props) => {
     console.log("Logged out successfully!");
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsAuthenticated(true);
-      setUser({ username: "User" });
-    }
-  }, []);
+
 
 
   //   const addToFavorites = async (movie) => {
