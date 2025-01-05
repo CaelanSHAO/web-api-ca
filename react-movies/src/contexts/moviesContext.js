@@ -76,6 +76,25 @@ const MoviesContextProvider = (props) => {
   //     console.error('Error fetching favorite movies details:', error.message);
   //   }
   // };
+  
+  const fetchFavorites = async () => {
+    const token = localStorage.getItem('token'); // 从 localStorage 获取 Token
+
+    const response = await fetch('/api/movies/favorites', {
+        headers: {
+            Authorization: token, // 在请求头中传递 Token
+        },
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        console.log('Favorites:', data);
+    } else {
+        console.error('Failed to fetch favorites');
+    }
+};
+
+
 
   const handlePageChange = (event, value) => {
     if (value < 1 || value > totalPages) {
