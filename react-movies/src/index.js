@@ -20,6 +20,7 @@ import theme from "./theme";
 import WatchlistMoviesPage from "./pages/watchlistMoviesPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import PrivateRoute from "./components/PrivateRoute";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,21 +41,25 @@ const App = () => {
         <MoviesContextProvider>
           <SiteHeader />
           <Routes>
-            <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
+            
             <Route path="/reviews/:id" element={ <MovieReviewPage /> } />
             <Route path="/movies/:id" element={<MoviePage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="*" element={ <Navigate to="/" /> } />
             <Route path="/reviews/form" element={ <AddMovieReviewPage /> } />
             <Route path="/movie/:id" element={<MovieDetails />} />
-            
-            <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />
-            <Route path="/movies/trending/:timeWindow" element={<TrendingTodayPage />} />
-            <Route path="/movie/now_playing" element={<NowPlayingPage />} />
-            <Route path="/person/:personId" element={<PersonDetailsPage />} />
-            <Route path="/movies/watchlist" element={<WatchlistMoviesPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+
+            
+            {/* Protected Routes */}
+            <PrivateRoute path="/movies/favorites" element={<FavoriteMoviesPage />} />
+            <PrivateRoute path="/movies/upcoming" element={<UpcomingMoviesPage />} />
+            <PrivateRoute path="/movies/trending/:timeWindow" element={<TrendingTodayPage />} />
+            <PrivateRoute path="/movie/now_playing" element={<NowPlayingPage />} />
+            <PrivateRoute path="/person/:personId" element={<PersonDetailsPage />} />
+            <PrivateRoute path="/movies/watchlist" element={<WatchlistMoviesPage />} />
+            
           
           </Routes>
         </MoviesContextProvider>

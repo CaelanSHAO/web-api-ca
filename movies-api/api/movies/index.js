@@ -17,6 +17,7 @@ import {
 
 import Favorite from './favoriteModel.js';
 import Watchlist from './watchlistModel.js';
+import authenticate from '../../authenticate/index.js';
 
 
 const router = express.Router();
