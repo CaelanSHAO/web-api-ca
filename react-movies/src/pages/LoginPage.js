@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        const redirectMessage = queryParams.get('redirectMessage');
+        if (redirectMessage) {
+            setError(redirectMessage);
+        }
+    }, []);
 
     const handleLogin = async () => {
-        const response = await fetch('/api/users?action=login', {
+        try {const response = await fetch('/api/users?action=login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
@@ -17,10 +28,18 @@ export default function LoginPage() {
             // 存储 Token
             localStorage.setItem('token', data.token);
             alert('Login successful');
+            navigate('/');
         } else {
             setError(data.msg || 'Login failed');
         }
-    };
+    
+            
+        } catch (error) {
+            setError('An unexpected error occurred');
+            
+        }
+    }
+        
     
 
     return (

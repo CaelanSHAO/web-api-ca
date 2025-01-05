@@ -1,15 +1,13 @@
-import React, { useContext } from 'react';
-import { Route, Navigate } from 'react-router-dom';
-import { MoviesContext } from '../contexts/moviesContext';
+import React from "react";
+import { Navigate } from "react-router-dom";
 
-const PrivateRoute = ({ element, ...rest }) => {
-  const { isAuthenticated } = useContext(MoviesContext);
+const PrivateRoute = ({ element }) => {
+  const isAuthenticated = !!localStorage.getItem("token"); // 检查用户是否已登录
 
-  return (
-    <Route
-      {...rest}
-      element={isAuthenticated ? element : <Navigate to="/login" />}
-    />
+  return isAuthenticated ? (
+    element
+  ) : (
+    <Navigate to="/login?redirectMessage=Please+login+to+access+this+page" />
   );
 };
 

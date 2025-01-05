@@ -165,7 +165,7 @@ router.post('/favorites', asyncHandler(async (req, res) => {
 }));
 
 //get favorites from userId
-router.get('/favorites/:userId', authenticate, asyncHandler(async (req, res) => {
+router.get('/favorites/:userId', asyncHandler(async (req, res) => {
     try {
         const favorites = await Favorite.find({ userId: req.params.userId });
         res.status(200).json(favorites);
