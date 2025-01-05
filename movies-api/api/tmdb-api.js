@@ -186,3 +186,11 @@ export const getMoviesByRating = async (min, max) => {
 };
 
   
+export const addFavoriteMovie = async (userId, movieId) => {
+    const response = await fetch('/api/movies/favorites', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, movieId }),
+    });
+    return response.json();
+};

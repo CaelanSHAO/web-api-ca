@@ -63,15 +63,30 @@ const MoviesContextProvider = (props) => {
 
 
 
-  //   const addToFavorites = async (movie) => {
-  //   try {
-  //     const data = await addFavoriteMovie(userId, movie.id);
-  //     setFavorites([...favorites, data]); 
-  //     console.log('Added to favorites:', data);
-  //   } catch (error) {
-  //     console.error('Error adding to favorites:', error.message);
-  //   }
-  // };
+  const addToFavorites = async (movieId) => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('/api/movies/favorites', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: token,
+            },
+            body: JSON.stringify({ userId: user?.username, movieId }),
+        });
+
+        if (response.ok) {
+            setFavorites([...favorites, movieId]); // 更新本地收藏状态
+            console.log('Movie added to favorites successfully');
+        } else {
+            const data = await response.json();
+            console.error('Failed to add to favorites:', data.message);
+        }
+    } catch (error) {
+        console.error('Error adding to favorites:', error);
+    }
+};
+
 
   // const fetchFavoritesDetails = async () => {
   //   try {
@@ -146,7 +161,7 @@ const MoviesContextProvider = (props) => {
     <MoviesContext.Provider
       value={{
         favorites,
-        // addToFavorites,
+        addToFavorites,
         // removeFromFavorites,
         // fetchFavoritesDetails,
         // watchlist,
